@@ -2,6 +2,7 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Select;
 
 public class CheckoutPage {
 
@@ -12,153 +13,219 @@ public class CheckoutPage {
         this.driver = driver;
     }
 
-    By searchBox = By.name("search");
+    By searchBox =
+            By.name("search");
 
-    By searchButton = By.xpath("//button[@class='btn btn-default btn-lg']");
+    By searchButton =
+            By.xpath("//button[@class='btn btn-default btn-lg']");
 
-    By hpProduct = By.linkText("HP LP3065");
+    By hpProduct =
+            By.linkText("HP LP3065");
 
-    By addToCart = By.id("button-cart");
+    By addToCart =
+            By.id("button-cart");
 
-    By checkoutButton = By.linkText("Checkout");
+    public void pause() {
 
-    By checkoutHeading = By.xpath("//h1[contains(text(),'Checkout')]");
+        try {
 
-    By billingDetails = By.xpath("//*[contains(text(),'Billing Details')]");
+            Thread.sleep(3000);
 
-    By shippingMethod = By.xpath("//*[contains(text(),'Delivery Details')]");
+        } catch (Exception e) {
 
-    By paymentMethod = By.xpath("//*[contains(text(),'Payment Method')]");
-
-    By confirmOrderButton = By.id("button-confirm");
+        }
+    }
 
     public void searchProduct(String product) {
 
         driver.findElement(searchBox).clear();
 
-        driver.findElement(searchBox).sendKeys(product);
+        driver.findElement(searchBox)
+                .sendKeys(product);
     }
 
     public void clickSearch() {
 
-        driver.findElement(searchButton).click();
+        driver.findElement(searchButton)
+                .click();
 
-        try {
-
-            Thread.sleep(3000);
-
-        } catch (Exception e) {
-
-        }
+        pause();
     }
 
     public void addProductToCart() {
 
-        driver.findElement(hpProduct).click();
+        driver.findElement(hpProduct)
+                .click();
 
-        try {
+        pause();
 
-            Thread.sleep(3000);
+        driver.findElement(addToCart)
+                .click();
 
-        } catch (Exception e) {
-
-        }
-
-        driver.findElement(addToCart).click();
-
-        try {
-
-            Thread.sleep(4000);
-
-        } catch (Exception e) {
-
-        }
+        pause();
     }
 
     public void openCheckoutPage() {
 
         driver.get(
-            "https://tutorialsninja.com/demo/index.php?route=checkout/cart");
+                "https://tutorialsninja.com/demo/index.php?route=checkout/checkout");
+
+        pause();
 
         try {
 
-            Thread.sleep(3000);
+            driver.findElement(
+                    By.xpath("//input[@value='guest']"))
+                    .click();
+
+            pause();
+
+            driver.findElement(
+                    By.id("button-account"))
+                    .click();
+
+            pause();
 
         } catch (Exception e) {
 
-        }
-
-        driver.findElement(checkoutButton).click();
-
-        try {
-
-            Thread.sleep(5000);
-
-        } catch (Exception e) {
-
-        }
-    }
-
-    public boolean isCheckoutPageDisplayed() {
-
-        try {
-
-            return driver.findElement(checkoutHeading).isDisplayed();
-
-        } catch (Exception e) {
-
-            return false;
+            System.out.println(
+                    "Guest checkout option not displayed");
         }
     }
 
-    public boolean isBillingDetailsDisplayed() {
+    public void enterBillingDetails() {
 
         try {
 
-            return driver.findElement(billingDetails).isDisplayed();
+            driver.findElement(
+                    By.id("input-payment-firstname"))
+                    .sendKeys("John");
+
+            driver.findElement(
+                    By.id("input-payment-lastname"))
+                    .sendKeys("David");
+
+            driver.findElement(
+                    By.id("input-payment-email"))
+                    .sendKeys(
+                            "john"
+                            + System.currentTimeMillis()
+                            + "@gmail.com");
+
+            driver.findElement(
+                    By.id("input-payment-telephone"))
+                    .sendKeys("9999999999");
+
+            driver.findElement(
+                    By.id("input-payment-address-1"))
+                    .sendKeys("Kakkanad");
+
+            driver.findElement(
+                    By.id("input-payment-city"))
+                    .sendKeys("Kochi");
+
+            driver.findElement(
+                    By.id("input-payment-postcode"))
+                    .sendKeys("682030");
+
+            pause();
+
+            Select country =
+                    new Select(
+                            driver.findElement(
+                                    By.id("input-payment-country")));
+
+            country.selectByVisibleText("India");
+
+            pause();
+
+            Select state =
+                    new Select(
+                            driver.findElement(
+                                    By.id("input-payment-zone")));
+
+            state.selectByVisibleText("Kerala");
+
+            pause();
 
         } catch (Exception e) {
 
-            return false;
+            System.out.println(
+                    "Billing details not filled");
         }
     }
 
-    public boolean isShippingMethodDisplayed() {
+    public void clickBillingContinue() {
 
         try {
 
-            return driver.findElement(shippingMethod).isDisplayed();
+            driver.findElement(
+                    By.id("button-guest"))
+                    .click();
+
+            pause();
 
         } catch (Exception e) {
 
-            return false;
+            System.out.println(
+                    "Billing continue button not found");
         }
     }
 
-    public boolean isPaymentMethodDisplayed() {
+    public void selectShippingMethod() {
 
         try {
 
-            return driver.findElement(paymentMethod).isDisplayed();
+            driver.findElement(
+                    By.id("button-shipping-method"))
+                    .click();
+
+            pause();
 
         } catch (Exception e) {
 
-            return false;
+            System.out.println(
+                    "Shipping method not selected");
         }
     }
 
-    public boolean isConfirmOrderButtonDisplayed() {
+    public void selectPaymentMethod() {
 
         try {
 
-            Thread.sleep(5000);
+            driver.findElement(
+                    By.name("agree"))
+                    .click();
 
-            return driver.getPageSource()
-                    .contains("Confirm Order");
+            pause();
+
+            driver.findElement(
+                    By.id("button-payment-method"))
+                    .click();
+
+            pause();
 
         } catch (Exception e) {
 
-            return false;
+            System.out.println(
+                    "Payment method not selected");
+        }
+    }
+
+    public void confirmOrder() {
+
+        try {
+
+            driver.findElement(
+                    By.id("button-confirm"))
+                    .click();
+
+            pause();
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Confirm order button not clicked");
         }
     }
 }

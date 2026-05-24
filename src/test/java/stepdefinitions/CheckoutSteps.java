@@ -17,12 +17,12 @@ public class CheckoutSteps extends DriverFactory {
     public void user_opens_checkout_application() {
 
         driver.get("https://tutorialsninja.com/demo/");
+
+        checkout = new CheckoutPage(driver);
     }
 
     @When("User searches product for checkout")
     public void user_searches_product_for_checkout() {
-
-        checkout = new CheckoutPage(driver);
 
         checkout.searchProduct("HP");
 
@@ -38,46 +38,43 @@ public class CheckoutSteps extends DriverFactory {
     @And("User opens checkout page")
     public void user_opens_checkout_page() {
 
-        if (checkout == null) {
-
-            checkout = new CheckoutPage(driver);
-        }
-
         checkout.openCheckoutPage();
     }
 
-    @Then("Checkout page should display successfully")
-    public void checkout_page_should_display_successfully() {
+    @And("User enters billing details")
+    public void user_enters_billing_details() {
 
-        Assert.assertTrue(
-                checkout.isCheckoutPageDisplayed());
+        checkout.enterBillingDetails();
+
+        checkout.clickBillingContinue();
     }
 
-    @Then("Billing details section should display")
-    public void billing_details_section_should_display() {
+    @And("User selects shipping method")
+    public void user_selects_shipping_method() {
 
-        Assert.assertTrue(
-                checkout.isBillingDetailsDisplayed());
+        checkout.selectShippingMethod();
     }
 
-    @Then("Delivery details section should display")
-    public void delivery_details_section_should_display() {
+    @And("User selects payment method")
+    public void user_selects_payment_method() {
 
-        Assert.assertTrue(
-                checkout.isShippingMethodDisplayed());
+        checkout.selectPaymentMethod();
     }
 
-    @Then("Payment method section should display")
-    public void payment_method_section_should_display() {
+    @And("User confirms order")
+    public void user_confirms_order() {
 
-        Assert.assertTrue(
-                checkout.isPaymentMethodDisplayed());
+        checkout.confirmOrder();
     }
 
-    @Then("Confirm order button should display")
-    public void confirm_order_button_should_display() {
+    @Then("Order should get confirmed successfully")
+    public void order_should_get_confirmed_successfully() {
 
         Assert.assertTrue(
-                checkout.isConfirmOrderButtonDisplayed());
+                driver.getPageSource()
+                        .contains("Your order has been placed")
+                ||
+                driver.getCurrentUrl()
+                        .contains("success"));
     }
 }
